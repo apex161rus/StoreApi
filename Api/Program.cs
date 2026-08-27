@@ -1,5 +1,7 @@
 using Api.Data;
 using Api.Extension;
+using Api.Seed;
+using Bogus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddPstgreSqlDbContext(builder.Configuration);
+builder.Services.AddPostgreSqlIdentityServiceExtension();
 
 // builder.Services.AddDbContext<AppDbContext>(Options => 
 // {
@@ -14,7 +17,8 @@ builder.Services.AddPstgreSqlDbContext(builder.Configuration);
 //         builder.Configuration.GetConnectionString("PostgreSQLConnection"));
 // });
 
-var app = builder.Build();
+var app = builder.Build()
+    .SeedProducts();
 
 app.MapControllers();
 

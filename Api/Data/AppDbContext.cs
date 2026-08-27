@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Api.Model;
+using Api.Seed;
 
 namespace Api.Data
 {
@@ -15,5 +12,8 @@ namespace Api.Data
         {
             
         }
+
+        public DbSet<AppUser> AppUsers {get; set;}
+        public DbSet<Product> Products {get; set;}
     }
 }
