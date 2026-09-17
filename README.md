@@ -10,6 +10,8 @@ Backend-приложение для интернет-магазина на ASP.N
 - [🗄️ Работа с БД](Docs/database/)
 - [🔄 Миграции](Docs/migrations/)
 - [🔧 Рефакторинг](Docs/refactoring/)
+- [📦 Модели](Docs/models/)
+- [Атрибуты моделей](Docs/models/model-attributes.md)
 
 ## 🏗️ Технологии
 - ASP.NET Core
