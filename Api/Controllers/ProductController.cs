@@ -1,5 +1,7 @@
 using Api.Data;
 using Api.Model;
+using Api.ModelDto;
+using Bogus.DataSets;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -14,7 +16,68 @@ namespace Api.Controllers
             
         }
 
-        [HttpGet("{id}")]
+        [HttpPost]
+        public async Task<ActionResult<ResponseServer>> AddProduct(ProductCreateDto productCreateDto)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if(productCreateDto.Image == null || productCreateDto.Image.Length == 0)
+                    {
+                        return BadRequest(new ResponseServer
+                        {
+                            HttpStatus = HttpStatusCode.BadRequest,
+                            IsSuccess = false,
+                            ErrorMessages = ["Image  не можит быть пусты"]
+                        });
+                    }
+                    else
+                    {
+                        var product = new Product
+                        {
+                            Name = productCreateDto.Name,
+                            Description = productCreateDto.Description,
+                            SpecialTag = productCreateDto.SpecialTag,
+                            Category = productCreateDto.Category,
+                            Price = productCreateDto.Price,
+                            Image = "https://placehold.ru/200"
+                        };
+                        
+                        await DbContext.Products.AddAsync(product);
+                        await DbContext.SaveChangesAsync();
+
+                        ResponseServer response = new ResponseServer
+                        {
+                            HttpStatus = HttpStatusCode.Created,
+                            Result = product
+                        };
+
+                        return CreatedAtRoute(nameof(GetProductID), new {id = product.Id}, response);
+                    }
+                }
+                else
+                {
+                    return BadRequest(new ResponseServer
+                    {
+                        IsSuccess = false,
+                        HttpStatus = HttpStatusCode. BadRequest,
+                        ErrorMessages = { "Модель данные не подходит" }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ResponseServer
+                    {
+                        IsSuccess = false,
+                        HttpStatus = HttpStatusCode. BadRequest,
+                        ErrorMessages = {$"чтото поломалось {ex}" }
+                    }); 
+            }
+        }
+
+        [HttpGet("{id}",Name = nameof(GetProductID))]
         public async Task<ActionResult<ResponseServer>> GetProductID(int id)
         {
             if(id <= 0)
