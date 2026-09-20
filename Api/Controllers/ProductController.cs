@@ -1,7 +1,6 @@
 using Api.Data;
 using Api.Model;
 using Api.ModelDto;
-using Bogus.DataSets;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -74,6 +73,78 @@ namespace Api.Controllers
                         HttpStatus = HttpStatusCode. BadRequest,
                         ErrorMessages = {$"чтото поломалось {ex}" }
                     }); 
+            }
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<ResponseServer>> UbdateProduct(int id,ProductUpdateDto productUpdateDto)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if(productUpdateDto == null ||  productUpdateDto.Id != id)
+                    {
+                         return BadRequest(new ResponseServer
+                         {
+                             IsSuccess = false,
+                             HttpStatus = HttpStatusCode.BadRequest,
+                             ErrorMessages = {"несоотвествие модели данных"}
+                         });
+                    }
+                    else
+                    {
+                        Product productFromDb = await DbContext.Products.FindAsync(id);
+                        if (productFromDb == null)
+                        {
+                            return NotFound(new ResponseServer
+                            {
+                                IsSuccess = false,
+                                HttpStatus = HttpStatusCode.NotFound,
+                                ErrorMessages = {$"Продукт с таким  Id {id} не найден"}
+                            });
+                        }
+
+                        productFromDb.Name = productUpdateDto.Name;
+                        productFromDb.Description = productUpdateDto.Description;
+                        productFromDb.SpecialTag = productUpdateDto.SpecialTag;
+                        productFromDb.Category = productUpdateDto.Category;
+                        productFromDb.Price = productUpdateDto.Price;
+                        productFromDb.Image = productUpdateDto.Image;
+
+                        if (productFromDb.Image != null && productFromDb.Image.Length > 0)
+                        {
+                            productFromDb.Image = "https://placehold.ru/350";
+                        }
+
+                        DbContext.Update(productFromDb);
+                        await DbContext.SaveChangesAsync();
+
+                        return Ok(new ResponseServer
+                        {
+                            HttpStatus = HttpStatusCode.OK,
+                            Result = productFromDb
+                        });
+                    }
+                }
+                else
+                {
+                    return BadRequest(new ResponseServer
+                         {
+                             IsSuccess = false,
+                             HttpStatus = HttpStatusCode.BadRequest,
+                             ErrorMessages = {"модель не соотвецтвует"}
+                         });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ResponseServer
+                         {
+                             IsSuccess = false,
+                             HttpStatus = HttpStatusCode.BadRequest,
+                             ErrorMessages = {$" Чтото пошло не так {ex}"}
+                         });
             }
         }
 
