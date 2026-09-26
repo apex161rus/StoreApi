@@ -15,6 +15,49 @@ namespace Api.Controllers
             
         }
 
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ResponseServer>> RemoveProductById(int id)
+        {
+            try
+            {
+                if (id <= 0)
+                {
+                    return BadRequest(new ResponseServer
+                    {
+                        HttpStatus = HttpStatusCode.BadRequest,
+                        IsSuccess = false,
+                        ErrorMessages = [$"Неверный id {id}"]
+                    });
+                }
+
+                var product = await DbContext.Products.FindAsync(id);
+
+                if(product == null)
+                {
+                    return NotFound(new ResponseServer
+                    {
+                        HttpStatus = HttpStatusCode.NotFound,
+                        IsSuccess = false,
+                        ErrorMessages = [$"Продукт с Id={id} не найден"]
+                    });
+                }
+
+                DbContext.Products.Remove(product); 
+                await DbContext.SaveChangesAsync();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ResponseServer
+                    {
+                        IsSuccess = false,
+                        HttpStatus = HttpStatusCode. BadRequest,
+                        ErrorMessages = { $"Проблемы с {id}: {ex.Message}" }
+                    });
+                
+            }
+        }
         [HttpPost]
         public async Task<ActionResult<ResponseServer>> AddProduct(ProductCreateDto productCreateDto)
         {
