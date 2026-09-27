@@ -25,8 +25,8 @@ namespace Api.Controllers
                 {
                     return BadRequest(new ResponseServer
                     {
-                        HttpStatus = HttpStatusCode.BadRequest,
                         IsSuccess = false,
+                        HttpStatus = HttpStatusCode.BadRequest,
                         ErrorMessages = [$"Неверный id {id}"]
                     });
                 }

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Api.Model;
-using Api.Seed;
 
 namespace Api.Data
 {

@@ -1,7 +1,4 @@
-using Api.Data;
 using Api.Extension;
-using Api.Seed;
-using Bogus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,15 +14,17 @@ builder.Services.AddPostgreSqlIdentityServiceExtension();
 //         builder.Configuration.GetConnectionString("PostgreSQLConnection"));
 // });
 
-var app = builder.Build()
-    .SeedProducts();
+var app = builder.Build();
+    // .SeedProducts();
 
 app.MapControllers();
 
+await app.Services.InitializeRoleAsync();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 app.Run();
