@@ -7,12 +7,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddPstgreSqlDbContext(builder.Configuration);
 builder.Services.AddPostgreSqlIdentityServiceExtension();
+builder.Services.AddconfigureIdentityoptions();
 
 // builder.Services.AddDbContext<AppDbContext>(Options => 
 // {
 //     Options.UseNpgsql(
 //         builder.Configuration.GetConnectionString("PostgreSQLConnection"));
 // });
+
 
 var app = builder.Build();
     // .SeedProducts();

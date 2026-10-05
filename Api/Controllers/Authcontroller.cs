@@ -19,7 +19,7 @@ namespace Api.Controllers
             _roleManager = roleManager;
         }
 
-        [HttpPost] 
+        [HttpPost]
         public async Task<IActionResult> Register(RegisterRequestDto registerRequestDto)
         {
             if (registerRequestDto == null)
@@ -32,7 +32,7 @@ namespace Api.Controllers
                 });
             }
 
-            var userFromDb = await DbContext.AppUsers.FirstOrDefaultAsync(x => x.Email.ToLower() == registerRequestDto.Email);
+            var userFromDb = await DbContext.AppUsers.FirstOrDefaultAsync(x => x.Email.ToLower() == registerRequestDto.Email.ToLower());
 
             if (userFromDb != null)
             {
