@@ -8,6 +8,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddPstgreSqlDbContext(builder.Configuration);
 builder.Services.AddPostgreSqlIdentityServiceExtension();
 builder.Services.AddconfigureIdentityoptions();
+builder.Services.AddJwtTokenGenerator();
 
 // builder.Services.AddDbContext<AppDbContext>(Options => 
 // {
