@@ -1,4 +1,5 @@
 using Api.Extension;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,8 @@ builder.Services.AddPstgreSqlDbContext(builder.Configuration);
 builder.Services.AddPostgreSqlIdentityServiceExtension();
 builder.Services.AddconfigureIdentityoptions();
 builder.Services.AddJwtTokenGenerator();
+builder.Services.AddAuthenticationConfig(builder.Configuration);
+builder.Services.AddCors();
 
 // builder.Services.AddDbContext<AppDbContext>(Options => 
 // {
@@ -19,6 +22,16 @@ builder.Services.AddJwtTokenGenerator();
 
 var app = builder.Build();
     // .SeedProducts();
+
+
+app.UseCors(options => options
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .AllowAnyOrigin()
+    .WithExposedHeaders("*"));
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
